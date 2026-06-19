@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { IUserUseCases } from "../../../02_Application_UseCasesAndPorts/In_Ports/IUserUseCases";
+import { IUserUseCases } from "../../02_Application_UseCasesAndPorts/In_Ports/IUserUseCases";
 import { createUserSchema, updateUserSchema } from "./UserSchemas";
 import { ZodError } from "zod";
 

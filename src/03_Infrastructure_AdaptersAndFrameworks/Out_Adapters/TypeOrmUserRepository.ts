@@ -1,6 +1,6 @@
 import { Repository } from "typeorm";
-import { User } from "../../../01_Domain_EnterpriseBusinessRules/User";
-import { IUserRepository } from "../../../02_Application_UseCasesAndPorts/Out_Ports/IUserRepository";
+import { User } from "../../01_Domain_EnterpriseBusinessRules/User";
+import { IUserRepository } from "../../02_Application_UseCasesAndPorts/Out_Ports/IUserRepository";
 import { UserOrmEntity } from "./UserOrmEntity";
 
 export class TypeOrmUserRepository implements IUserRepository {
