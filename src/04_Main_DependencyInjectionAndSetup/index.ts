@@ -17,31 +17,31 @@ app.use(express.json());
 
 async function bootstrap() {
   try {
-    // 1. Inicializamos Base de Datos (Adaptador de Salida)
+    // 1. Initialize Database (Out Adapter)
     await AppDataSource.initialize();
     console.log("Database initialized successfully");
 
-    // 2. Composición / Inyección de Dependencias
-    // Instanciamos el repositorio ORM
+    // 2. Dependency Injection / Composition Root
+    // Instantiate ORM Repository
     const userOrmRepository = AppDataSource.getRepository(UserOrmEntity);
     
-    // Instanciamos nuestro Repositorio que implementa IUserRepository (Puerto de salida)
+    // Instantiate our Repository that implements IUserRepository (Out Port)
     const userRepository = new TypeOrmUserRepository(userOrmRepository);
     
-    // Instanciamos el Caso de Uso (Capa de Aplicación), inyectándole el repositorio
+    // Instantiate Use Case (Application Layer), injecting the repository
     const userUseCases = new UserUseCasesImpl(userRepository);
     
-    // Instanciamos el Controlador (Adaptador de entrada), inyectándole los Casos de Uso
+    // Instantiate Controller (In Adapter), injecting the Use Cases
     const userController = new UserController(userUseCases);
 
-    // 3. Configuración de Rutas (Mundo exterior -> Adaptador de entrada)
+    // 3. Route Configuration (External World -> In Adapter)
     app.post("/users", userController.create);
     app.get("/users", userController.getAll);
     app.get("/users/:id", userController.get);
     app.put("/users/:id", userController.update);
     app.delete("/users/:id", userController.delete);
 
-    // 4. Arrancar servidor
+    // 4. Start Server
     const port = process.env.PORT || 3000;
     app.listen(port, () => {
       console.log(`Server running on port ${port}`);

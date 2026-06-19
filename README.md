@@ -1,85 +1,124 @@
-# Hexagonal Architecture Node Study
+<div align="center">
+  <h1>Hexagonal Architecture Node Study</h1>
+  <p>A robust, scalable, and strictly decoupled REST API built with Node.js to study and apply the Hexagonal Architecture (Ports and Adapters) pattern.</p>
+</div>
 
-Este proyecto es un entorno de estudio diseñado para implementar estrictamente los conceptos de la **Arquitectura Hexagonal** (Puertos y Adaptadores) usando **Node.js, TypeScript, Express, TypeORM y PostgreSQL**.
+<br />
 
-## Teoría: Arquitectura Hexagonal
+## 🚀 Technologies Used
 
-La arquitectura hexagonal busca aislar la lógica de negocio pura de todas las tecnologías y mecanismos de entrega. Esto se logra gracias a la "Regla de Dependencia": las dependencias siempre deben apuntar hacia adentro (hacia el dominio).
+- **Runtime:** Node.js
+- **Language:** TypeScript
+- **Web Framework:** Express (v4.x)
+- **Database:** PostgreSQL (v15)
+- **ORM:** TypeORM (v0.3.x)
+- **Validation:** Zod (v3.x)
+- **Containerization:** Docker & Docker Compose
 
-### Capas (De Adentro hacia Afuera)
+## 🏗️ Architecture Overview
 
-1. **01_Domain_EnterpriseBusinessRules**: La esencia pura de la aplicación. Aquí viven las Entidades y las Reglas de Negocio. No conoce nada sobre frameworks, HTTP o Bases de Datos.
-2. **02_Application_UseCasesAndPorts**: Contiene la lógica específica de los Casos de Uso. Esta capa define "Puertos" (Interfaces):
-   - **In Ports:** Cómo el mundo exterior puede interactuar con el Dominio.
-   - **Out Ports:** Qué necesita la Aplicación del mundo exterior (ej. guardar datos, enviar emails) sin saber cómo se implementa.
-3. **03_Infrastructure_AdaptersAndFrameworks**: Implementaciones concretas. 
-   - **In Adapters:** Controladores Express que reciben JSON, lo validan (con Zod) y llaman a los *In Ports*.
-   - **Out Adapters:** Repositorios TypeORM que implementan los *Out Ports*, traduciendo entidades de dominio a entidades de Base de Datos y hablando con PostgreSQL.
-4. **04_Main_DependencyInjectionAndSetup**: Ensambla todas las piezas. Es el "Composition Root" donde se instancian los adaptadores concretos y se inyectan en los casos de uso.
+Hexagonal Architecture aims to isolate pure business logic from all technologies and delivery mechanisms. It adheres to the "Dependency Rule": dependencies must always point inward (towards the domain).
 
-## Diagrama de la Arquitectura
+### Layers (Inside-Out)
+
+1. **`01_Domain_EnterpriseBusinessRules`**: The core of the application. Contains Entities and Business Rules. It knows nothing about frameworks, HTTP, or Databases.
+2. **`02_Application_UseCasesAndPorts`**: Contains specific Use Case logic. This layer defines "Ports" (Interfaces):
+   - **In Ports:** How the outside world interacts with the Domain.
+   - **Out Ports:** What the Application needs from the outside world (e.g., storing data) without knowing the implementation details.
+3. **`03_Infrastructure_AdaptersAndFrameworks`**: Concrete implementations.
+   - **In Adapters:** Express Controllers that receive JSON, validate it (using Zod), and call the *In Ports*.
+   - **Out Adapters:** TypeORM Repositories that implement the *Out Ports*, mapping Domain Entities to Database Entities and communicating with PostgreSQL.
+4. **`04_Main_DependencyInjectionAndSetup`**: The "Composition Root". Assembles all components by instantiating concrete adapters and injecting them into the use cases.
+
+### Architecture Diagram
 
 ```mermaid
 graph TD
-    %% Define Styles
     classDef domain fill:#f9f,stroke:#333,stroke-width:2px;
     classDef application fill:#bbf,stroke:#333,stroke-width:2px;
     classDef infrastructure fill:#dfd,stroke:#333,stroke-width:2px;
     classDef external fill:#eee,stroke:#333,stroke-width:1px,stroke-dasharray: 5 5;
 
-    %% External World
-    subgraph External_World ["Mundo Exterior"]
-        Client[Cliente HTTP / Postman]
+    subgraph External_World ["External World"]
+        Client[HTTP Client / Postman]
         DB[(PostgreSQL)]
     end
     class External_World external
 
-    %% Infrastructure Layer
-    subgraph Infrastructure ["03. Infraestructura (Adaptadores)"]
+    subgraph Infrastructure ["03. Infrastructure (Adapters)"]
         InAdapter[UserController <br/> Express + Zod]
         OutAdapter[TypeOrmUserRepository <br/> TypeORM]
     end
     class Infrastructure infrastructure
 
-    %% Application Layer
-    subgraph Application ["02. Aplicación (Casos de Uso y Puertos)"]
+    subgraph Application ["02. Application (Use Cases & Ports)"]
         InPort((IUserUseCases))
         UseCase[UserUseCasesImpl]
         OutPort((IUserRepository))
     end
     class Application application
 
-    %% Domain Layer
-    subgraph Domain ["01. Dominio (Reglas de Negocio)"]
+    subgraph Domain ["01. Domain (Business Rules)"]
         Entity[User Entity <br/> DomainException]
     end
     class Domain domain
 
-    %% Flow of Control and Dependencies
     Client -->|HTTP POST| InAdapter
-    InAdapter -->|Llama| InPort
-    InPort -.->|Implementado por| UseCase
+    InAdapter -->|Calls| InPort
+    InPort -.->|Implemented By| UseCase
     
-    UseCase -->|Instancia/Usa| Entity
-    UseCase -->|Llama| OutPort
+    UseCase -->|Instantiates/Uses| Entity
+    UseCase -->|Calls| OutPort
     
-    OutAdapter -.->|Implementa| OutPort
-    OutAdapter -->|Usa| Entity
+    OutAdapter -.->|Implements| OutPort
+    OutAdapter -->|Uses| Entity
     OutAdapter -->|SQL Queries| DB
 ```
 
-## Ejecución con Docker
+## 🔌 API Endpoints
 
-```bash
-# 1. Levantar la base de datos PostgreSQL y pgAdmin
-docker-compose up -d
+| Method | Endpoint | Description | Request Body |
+|--------|----------|-------------|--------------|
+| `POST` | `/users` | Create a new user | `{ "name": "string", "email": "string", "age": number }` |
+| `GET`  | `/users` | Get all users | - |
+| `GET`  | `/users/:id` | Get user by ID | - |
+| `PUT`  | `/users/:id` | Update user | `{ "name": "string", "age": number }` |
+| `DELETE` | `/users/:id` | Delete user | - |
 
-# 2. Instalar dependencias
-npm install
+## 🛠️ Installation & Setup
 
-# 3. Arrancar en modo desarrollo
-npm run dev
-```
+### Prerequisites
+- [Node.js](https://nodejs.org/) (v18+ recommended)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop)
 
-pgAdmin está disponible en `http://localhost:5050` (admin@admin.com / admin).
-La API está disponible en `http://localhost:3000`.
+### Steps
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/MNATorres/hexagonal-architecture-node-study.git
+   cd hexagonal-architecture-node-study
+   ```
+
+2. **Start the Infrastructure (PostgreSQL & pgAdmin)**
+   ```bash
+   docker-compose up -d
+   ```
+   > *pgAdmin will be available at `http://localhost:5050` (Login: `admin@admin.com` / Password: `admin`)*
+
+3. **Install Dependencies**
+   ```bash
+   npm install
+   ```
+
+4. **Run the Application (Development Mode)**
+   ```bash
+   npm run dev
+   ```
+   > *The API will be available at `http://localhost:3000`*
+
+## 🧑‍💻 Useful Commands
+
+- `npm run dev`: Starts the server with Nodemon and `ts-node`.
+- `npx tsc --noEmit`: Type-checks the project without compiling output.
+- `docker-compose up -d`: Starts the background services (DB, GUI).
+- `docker-compose down`: Stops and removes the background containers.
