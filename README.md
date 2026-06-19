@@ -5,32 +5,7 @@
 
 <br />
 
-## 🚀 Technologies Used
-
-- **Runtime:** Node.js
-- **Language:** TypeScript
-- **Web Framework:** Express (v4.x)
-- **Database:** PostgreSQL (v15)
-- **ORM:** TypeORM (v0.3.x)
-- **Validation:** Zod (v3.x)
-- **Containerization:** Docker & Docker Compose
-
-## 🏗️ Architecture Overview
-
-Hexagonal Architecture aims to isolate pure business logic from all technologies and delivery mechanisms. It adheres to the "Dependency Rule": dependencies must always point inward (towards the domain).
-
-### Layers (Inside-Out)
-
-1. **`01_Domain_EnterpriseBusinessRules`**: The core of the application. Contains Entities and Business Rules. It knows nothing about frameworks, HTTP, or Databases.
-2. **`02_Application_UseCasesAndPorts`**: Contains specific Use Case logic. This layer defines "Ports" (Interfaces):
-   - **In Ports:** How the outside world interacts with the Domain.
-   - **Out Ports:** What the Application needs from the outside world (e.g., storing data) without knowing the implementation details.
-3. **`03_Infrastructure_AdaptersAndFrameworks`**: Concrete implementations.
-   - **In Adapters:** Express Controllers that receive JSON, validate it (using Zod), and call the *In Ports*.
-   - **Out Adapters:** TypeORM Repositories that implement the *Out Ports*, mapping Domain Entities to Database Entities and communicating with PostgreSQL.
-4. **`04_Main_DependencyInjectionAndSetup`**: The "Composition Root". Assembles all components by instantiating concrete adapters and injecting them into the use cases.
-
-### Architecture Diagram
+## 🏗️ Architecture Diagram
 
 ```mermaid
 graph TD
@@ -74,6 +49,31 @@ graph TD
     OutAdapter -->|Uses| Entity
     OutAdapter -->|SQL Queries| DB
 ```
+
+## 🚀 Technologies Used
+
+- **Runtime:** Node.js
+- **Language:** TypeScript
+- **Web Framework:** Express (v4.x)
+- **Database:** PostgreSQL (v15)
+- **ORM:** TypeORM (v0.3.x)
+- **Validation:** Zod (v3.x)
+- **Containerization:** Docker & Docker Compose
+
+## 📖 Architecture Overview
+
+Hexagonal Architecture aims to isolate pure business logic from all technologies and delivery mechanisms. It adheres to the "Dependency Rule": dependencies must always point inward (towards the domain).
+
+### Layers (Inside-Out)
+
+1. **`01_Domain_EnterpriseBusinessRules`**: The core of the application. Contains Entities and Business Rules. It knows nothing about frameworks, HTTP, or Databases.
+2. **`02_Application_UseCasesAndPorts`**: Contains specific Use Case logic. This layer defines "Ports" (Interfaces):
+   - **In Ports:** How the outside world interacts with the Domain.
+   - **Out Ports:** What the Application needs from the outside world (e.g., storing data) without knowing the implementation details.
+3. **`03_Infrastructure_AdaptersAndFrameworks`**: Concrete implementations.
+   - **In Adapters:** Express Controllers that receive JSON, validate it (using Zod), and call the *In Ports*.
+   - **Out Adapters:** TypeORM Repositories that implement the *Out Ports*, mapping Domain Entities to Database Entities and communicating with PostgreSQL.
+4. **`04_Main_DependencyInjectionAndSetup`**: The "Composition Root". Assembles all components by instantiating concrete adapters and injecting them into the use cases.
 
 ## 🔌 API Endpoints
 
