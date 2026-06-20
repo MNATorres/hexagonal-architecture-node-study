@@ -21,7 +21,7 @@ export class UserController {
       res.status(201).json(user);
     } catch (error: any) {
       if (error instanceof ZodError) {
-        return res.status(400).json({ errors: error.errors });
+        return res.status(400).json({ errors: (error as any).errors });
       }
       res.status(400).json({ error: error.message });
     }
@@ -29,7 +29,7 @@ export class UserController {
 
   async get(req: Request, res: Response) {
     try {
-      const user = await this.userUseCases.getUser(req.params.id);
+      const user = await this.userUseCases.getUser(req.params.id as string);
       if (!user) return res.status(404).json({ error: "User not found" });
       res.json(user);
     } catch (error: any) {
@@ -49,11 +49,11 @@ export class UserController {
   async update(req: Request, res: Response) {
     try {
       const data = updateUserSchema.parse(req.body);
-      const user = await this.userUseCases.updateUser(req.params.id, data.name, data.age);
+      const user = await this.userUseCases.updateUser(req.params.id as string, data.name, data.age);
       res.json(user);
     } catch (error: any) {
       if (error instanceof ZodError) {
-        return res.status(400).json({ errors: error.errors });
+        return res.status(400).json({ errors: (error as any).errors });
       }
       res.status(400).json({ error: error.message });
     }
@@ -61,7 +61,7 @@ export class UserController {
 
   async delete(req: Request, res: Response) {
     try {
-      await this.userUseCases.deleteUser(req.params.id);
+      await this.userUseCases.deleteUser(req.params.id as string);
       res.status(204).send();
     } catch (error: any) {
       res.status(500).json({ error: error.message });
