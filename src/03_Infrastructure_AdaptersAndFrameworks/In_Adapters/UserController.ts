@@ -21,7 +21,7 @@ export class UserController {
       res.status(201).json(user);
     } catch (error: any) {
       if (error instanceof ZodError) {
-        return res.status(400).json({ errors: (error as any).errors });
+        return res.status(400).json({ errors: error.issues });
       }
       res.status(400).json({ error: error.message });
     }
@@ -53,7 +53,7 @@ export class UserController {
       res.json(user);
     } catch (error: any) {
       if (error instanceof ZodError) {
-        return res.status(400).json({ errors: (error as any).errors });
+        return res.status(400).json({ errors: error.issues });
       }
       res.status(400).json({ error: error.message });
     }
