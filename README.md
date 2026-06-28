@@ -7,48 +7,8 @@
 
 ## 🏗️ Architecture Diagram
 
-```mermaid
-graph TD
-    classDef domain fill:#f9f,stroke:#333,stroke-width:2px;
-    classDef application fill:#bbf,stroke:#333,stroke-width:2px;
-    classDef infrastructure fill:#dfd,stroke:#333,stroke-width:2px;
-    classDef external fill:#eee,stroke:#333,stroke-width:1px,stroke-dasharray: 5 5;
-
-    subgraph External_World ["External World"]
-        Client[HTTP Client / Postman]
-        DB[(PostgreSQL)]
-    end
-    class External_World external
-
-    subgraph Infrastructure ["03. Infrastructure (Adapters)"]
-        InAdapter[UserController <br/> Express + Zod]
-        OutAdapter[TypeOrmUserRepository <br/> TypeORM]
-    end
-    class Infrastructure infrastructure
-
-    subgraph Application ["02. Application (Use Cases & Ports)"]
-        InPort((IUserUseCases))
-        UseCase[UserUseCasesImpl]
-        OutPort((IUserRepository))
-    end
-    class Application application
-
-    subgraph Domain ["01. Domain (Business Rules)"]
-        Entity[User Entity <br/> DomainException]
-    end
-    class Domain domain
-
-    Client -->|HTTP POST| InAdapter
-    InAdapter -->|Calls| InPort
-    InPort -.->|Implemented By| UseCase
-    
-    UseCase -->|Instantiates/Uses| Entity
-    UseCase -->|Calls| OutPort
-    
-    OutAdapter -.->|Implements| OutPort
-    OutAdapter -->|Uses| Entity
-    OutAdapter -->|SQL Queries| DB
-```
+> 📐 **The full architecture diagrams and a didactic, step-by-step walkthrough live in [ARCHITECTURE.md](ARCHITECTURE.md).**
+> It covers the hexagon (core vs adapters), ports vs adapters, the driving/driven asymmetry, the Dependency Rule, and the complete request → persistence flow.
 
 ## 🚀 Technologies Used
 
