@@ -48,9 +48,9 @@ graph LR
     Repo -.->|implements| OutPort
     Repo -->|SQL| DB
 
-    classDef domain fill:#f9f,stroke:#333,stroke-width:2px;
-    classDef application fill:#bbf,stroke:#333,stroke-width:2px;
-    classDef infrastructure fill:#dfd,stroke:#333,stroke-width:2px;
+    classDef domain fill:#f9f,stroke:#333,stroke-width:2px,color:#1a1a1a;
+    classDef application fill:#bbf,stroke:#333,stroke-width:2px,color:#1a1a1a;
+    classDef infrastructure fill:#dfd,stroke:#333,stroke-width:2px,color:#1a1a1a;
     class DOM,Entity domain
     class APP,InPort,UseCase,OutPort application
     class DRIVING,DRIVEN,Controller,Repo infrastructure
@@ -83,10 +83,10 @@ This diagram zooms into the actual request lifecycle (`POST /users` and friends)
 
 ```mermaid
 graph TD
-    classDef domain fill:#f9f,stroke:#333,stroke-width:2px;
-    classDef application fill:#bbf,stroke:#333,stroke-width:2px;
-    classDef infrastructure fill:#dfd,stroke:#333,stroke-width:2px;
-    classDef external fill:#eee,stroke:#333,stroke-width:1px,stroke-dasharray: 5 5;
+    classDef domain fill:#f9f,stroke:#333,stroke-width:2px,color:#1a1a1a;
+    classDef application fill:#bbf,stroke:#333,stroke-width:2px,color:#1a1a1a;
+    classDef infrastructure fill:#dfd,stroke:#333,stroke-width:2px,color:#1a1a1a;
+    classDef external fill:#eee,stroke:#333,stroke-width:1px,stroke-dasharray: 5 5,color:#1a1a1a;
 
     subgraph External_World ["External World"]
         Client[HTTP Client / Postman]
